@@ -18,8 +18,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from langsmith import traceable
 
 load_dotenv()
-
-PDF_PATH = "islr.pdf"  # <- change to your file
+os.environ["LANGCHAIN_PROJECT"] = "RAG CHATBOT"
+PDF_PATH = "Bimodal_RAG__Eng_.pdf"  # <- change to your file
 
 
 # ----------------- helpers (not traced individually) -----------------

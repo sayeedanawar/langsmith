@@ -1,3 +1,5 @@
+import os
+
 # pip install -U langchain langchain-openai langchain-community faiss-cpu pypdf python-dotenv
 from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -12,10 +14,11 @@ from langchain_core.runnables import (
 )
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
+os.environ["LANGCHAIN_PROJECT"] = "RAG CHATBOT"
 load_dotenv()
 
 
-PDF_PATH = "islr.pdf"  # <-- change to your PDF filename
+PDF_PATH = "Bimodal_RAG__Eng_.pdf"  # <-- change to your PDF filename
 
 # 1) Load PDF
 loader = PyPDFLoader(PDF_PATH)

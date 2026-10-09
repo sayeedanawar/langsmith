@@ -1,4 +1,4 @@
-# pip install -U langchain langchain-openai langchain-community faiss-cpu pypdf python-dotenv langsmith
+# pip install -U langchain langchain-community faiss-cpu pypdf python-dotenv langsmith langchain-google-genai
 
 import hashlib
 import json
@@ -20,9 +20,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 
 from langsmith import traceable
 
+os.environ["LANGCHAIN_PROJECT"] = "RAG CHATBOT"
 load_dotenv()
 
-PDF_PATH = "islr.pdf"  # change to your file
+PDF_PATH = "Bimodal_RAG__Eng_.pdf"  # change to your file
 INDEX_ROOT = Path(".indices")
 INDEX_ROOT.mkdir(exist_ok=True)
 
@@ -30,7 +31,7 @@ INDEX_ROOT.mkdir(exist_ok=True)
 # ----------------- helpers (traced) -----------------
 @traceable(name="load_pdf")
 def load_pdf(path: str):
-    return PyPDFLoader(path).load()  # list[Document]
+    return PyPDFLoader(path).load()
 
 
 @traceable(name="split_documents")
@@ -38,7 +39,9 @@ def split_documents(docs, chunk_size=1000, chunk_overlap=150):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size, chunk_overlap=chunk_overlap
     )
-    return splitter.split_documents(docs)
+    splits = splitter.split_documents(docs)
+
+    return splits
 
 
 @traceable(name="build_vectorstore")
@@ -89,11 +92,9 @@ def build_index_run(
     chunk_overlap: int,
     embed_model_name: str,
 ):
-    docs = load_pdf(pdf_path)  # child
-    splits = split_documents(
-        docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap
-    )  # child
-    vs = build_vectorstore(splits, embed_model_name)  # child
+    docs = load_pdf(pdf_path)
+    splits = split_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    vs = build_vectorstore(splits, embed_model_name)
     index_dir.mkdir(parents=True, exist_ok=True)
     vs.save_local(str(index_dir))
     (index_dir / "meta.json").write_text(
@@ -115,7 +116,7 @@ def load_or_build_index(
     pdf_path: str,
     chunk_size: int = 1000,
     chunk_overlap: int = 150,
-    embed_model_name: str = "text-embedding-3-small",
+    embed_model_name: str = "gemini-embedding-2-preview",  # Updated to Gemini model
     force_rebuild: bool = False,
 ):
     key = _index_key(pdf_path, chunk_size, chunk_overlap, embed_model_name)
@@ -154,7 +155,7 @@ def setup_pipeline(
     pdf_path: str,
     chunk_size=1000,
     chunk_overlap=150,
-    embed_model_name="text-embedding-3-small",
+    embed_model_name="gemini-embedding-2-preview",  # Updated to Gemini model
     force_rebuild=False,
 ):
     return load_or_build_index(
@@ -172,7 +173,7 @@ def setup_pipeline_and_query(
     question: str,
     chunk_size: int = 1000,
     chunk_overlap: int = 150,
-    embed_model_name: str = "text-embedding-3-small",
+    embed_model_name: str = "gemini-embedding-2-preview",  # Updated to Gemini model
     force_rebuild: bool = False,
 ):
     vectorstore = setup_pipeline(

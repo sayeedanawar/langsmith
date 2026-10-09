@@ -22,9 +22,11 @@ from langsmith import traceable  # <-- key import
 # LANGCHAIN_API_KEY=...
 # LANGCHAIN_PROJECT=pdf_rag_demo
 
+os.environ["LANGCHAIN_PROJECT"] = "RAG CHATBOT"
+
 load_dotenv()
 
-PDF_PATH = "islr.pdf"  # change to your file
+PDF_PATH = "Bimodal_RAG__Eng_.pdf"  # change to your file
 
 
 # ---------- traced setup steps ----------

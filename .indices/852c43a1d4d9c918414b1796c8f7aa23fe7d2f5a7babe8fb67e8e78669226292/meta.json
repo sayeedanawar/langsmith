@@ -1,0 +1,6 @@
+{
+  "pdf_path": "D:\\Code\\campusx\\langsmith\\Bimodal_RAG__Eng_.pdf",
+  "chunk_size": 1000,
+  "chunk_overlap": 150,
+  "embedding_model": "gemini-embedding-2-preview"
+}
