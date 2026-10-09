@@ -1,6 +1,6 @@
 # pip install -U langgraph langchain-openai pydantic python-dotenv langsmith
-
 import operator
+import os
 from typing import Annotated, List, TypedDict
 
 from dotenv import load_dotenv
@@ -10,11 +10,12 @@ from pydantic import BaseModel, Field
 
 from langsmith import traceable
 
+os.environ["LANGCHAIN_PROJECT"] = "LangGraph"
 # ---------- Setup ----------
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash", temperature=0, max_output_tokens=1000
+    model="gemini-flash-lite-latest", temperature=0, max_output_tokens=1000
 )
 
 
